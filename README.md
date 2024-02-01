@@ -56,8 +56,7 @@ Shiny page layout has basically three elements:
 
     - $\textbf{Main panel}$: The main panel area occupies 2/3 of the page and typically contains outputs. $\textbf{(3)}$. Outputs can be data table, images, text or figures. Below a cheatsheet of outputs functions.
 
-    ![alt text](cheatsheet-outputs.png)
-
+![alt text](cheatsheet-outputs.png)
 
 ## Server
 
