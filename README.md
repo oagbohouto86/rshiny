@@ -65,9 +65,40 @@ In server function, we tell Shiny how to build the output object. It will be rea
 
 Server function take two arguments:
 
-- $\textbf{Input}$: corresponds to a list-like object of the current value of each widget/input defined in the ui. To call the value of a widget in server function, we just use R code $\texttt{input$name_of_my_widget}$. 
+- $\textbf{Input}$: corresponds to a list-like object of the current value of each widget/input defined in the ui. To call the value of a widget in server function, we just use R code $\texttt{input\$name\_of\_my\_widget}$. 
 
-- $\textbf{Output}$: corresponds to a list-like object of each output object defined in the ui. Server function will build each R output object in this list using a specific code. To call output object in server function, just use $\texttt{output$name_of_your_output_object}$
+- $\textbf{Output}$: corresponds to a list-like object of each output object defined in the ui. Server function will build each R output object in this list using a specific code. To call output object in server function, just use $\texttt{output\$name\_of\_your\_output\_object}$.
+
+## Execution
+
+It’s important to understand Shiny app script execution to improve performance of our webapp by correctly placing commands used inside script  (load packages, load data, use external script, run general script, …)
+
+In other words, where you place commands will determine how many times they are run (or re-run) into the script, which will in turn affect the performance of your app, since Shiny will run some sections your app.R script more often than others.
+![alt text](execution_schem.png)
+
+Based on this info, my advices are:
+- Source scripts, load libraries, and read data sets at the beginning of app outside of the server function. Shiny will only run this code once, which is all you need to set your server up to run the R expressions contained in server. These are called global codes.
+
+- Define user specific objects inside server function, but outside of any render* calls. These would be objects that you think each user will need their own personal copy of.
+
+- Only place code that Shiny must rerun to build an object inside of a render* function. Shiny will rerun all of the code in a render* chunk each time a user changes a widget mentioned in the chunk. This can be quite often.
+
+## Deploy
+
+There are two basics ways to share a shiny app with R:
+
+- Share your Shiny app as R scripts:
+    - Send Shiny directory as a zip file by email
+    - Host shiny scripts online
+    - Zip shiny directory on a web page and in R run: runUrl( "<the weblink>")
+    - Push shiny directory on Github and in R run: runGitHub( "<your repository name>", "<your user name>")
+    - Copy and paste shiny scripts on Gist and in R run: runGist(“<your gist hash>")
+
+- Share your Shiny app as a web page:
+    - Using shinyapps.io. It's freeeee and easy use!!!
+    - Shiny Server
+    - Posit Connect: closer control, password admin or want to manage large volumes of traffic, you can purchase Posit Connect from Posit.
 
 
-[click here to run app](https://oagbohouto.shinyapps.io/APP-4/?_ga=2.60336173.1667294675.1682961383-489944053.1682961383)
+
+[Please click here to run app of this repo](https://oagbohouto.shinyapps.io/APP-4/?_ga=2.60336173.1667294675.1682961383-489944053.1682961383)

@@ -11,6 +11,7 @@ library(plotly)
 library(factoextra)
 library(usmap)
 library(skimr)
+library(shinythemes)
 
 # Global code run once app is open----
 #load("T:/BU STAT/Auto-formations/OOA/RSHINY/data/states.RData")
@@ -41,9 +42,11 @@ for (i in 1:length(inertie)){
 nb_cluster_opt=which(dif==min(dif,na.rm=TRUE))+1
 
 # Code for app----
+
+## User Interface code ----
 ui<-navbarPage(title = "Unsupervised learning",
                tabPanel("Home",
-                        fluidPage(titlePanel("WELCOME "),
+                        fluidPage(theme = shinytheme("cosmo"),titlePanel("WELCOME "),
                                   sidebarLayout(
                                     sidebarPanel(helpText("This webapp will help you to classify states of USA using 
                                        their demographic datas."),
@@ -144,18 +147,18 @@ ui<-navbarPage(title = "Unsupervised learning",
                                                ),
                                                mainPanel(tabsetPanel(
                                                  tabPanel("General results",br(),
+                                                          fluidRow(plotlyOutput("map_general")),br(),
                                                           fluidRow(textOutput("optk"),br(),br(),
                                                                    column(6,textOutput("size_cluster1"),br(),dataTableOutput("cluster_1")),
                                                                    column(6,textOutput("size_cluster2"),br(),dataTableOutput("cluster_2"))
-                                                          ),
-                                                          fluidRow(plotlyOutput("map_general"))
+                                                          )
                                                  ),
                                                  tabPanel("Build your own cluster",br(),
                                                           textOutput("text_choosek"),
                                                           h5("These are you clusters"),br(),
+                                                          plotlyOutput("map_choose"),br(),
                                                           helpText("Hint: Tap the numero or states names in 'Search' widgets to see profil of this states or member of this cluster"),br(),
-                                                          dataTableOutput("cluster_choose"),br(),
-                                                          plotlyOutput("map_choose")
+                                                          dataTableOutput("cluster_choose")
                                                  )
                                                )
                                                )
@@ -167,12 +170,12 @@ ui<-navbarPage(title = "Unsupervised learning",
                                              sidebarLayout(
                                                sidebarPanel(
                                                  helpText("In CAH algorithms, we use euclidean distance to compute distance matrix
-                                     and WARD method to compute cluster based on distance."),
+                                     and WARD method to compute cluster based on euclidean distance."),
                                                  br(),
-                                                 helpText("First tab present general result by using the optimal number of
-                                     cluster using minimization of within variance and maximization of between variance.
-                                     You can personnalize your clustering by choosing a number of cluster and visualize
-                                     result on next tab."),
+                                                 p("Note: First tab present general result by using the optimal number of
+                                                  cluster using minimization of within variance and maximization of between variance."),
+                                                 p("You can personnalize your clustering by choosing a number of cluster and visualize
+                                                result on", strong("Build your own cluster") ,"tab."),
                                                  numericInput("choosek2","Please select a number of cluster",min=2,max=12,value=2)
                                                ),
                                                mainPanel(
@@ -197,7 +200,7 @@ ui<-navbarPage(title = "Unsupervised learning",
                
 )
 
-# server function ----
+## server function ----
 
 server<-function(input,output){
   
@@ -394,7 +397,7 @@ server<-function(input,output){
   #oPTIMAL DENDOGRAM
   output$dendo1<-renderPlot({
     ggplot(color_branches(datascale.ag, k = nb_cluster_opt), labels = TRUE)
-    fviz_dend(datascale.ag,k = nb_cluster_opt, cex=0.5, show_labels = TRUE, rect = TRUE, color_labels_by_k = TRUE, ggtheme = theme_gray())
+    fviz_dend(datascale.ag,k = nb_cluster_opt, cex=1.10, show_labels = TRUE, rect = TRUE, color_labels_by_k = TRUE, ggtheme = theme_void())
   })
   
   #Text for number of cluster select CAH
@@ -405,14 +408,14 @@ server<-function(input,output){
   
   #Dendogram for chosen cluster using CAH
   output$dendo2<-renderPlot({
-    datascale.dist = dist(raw_data_scale,method="euclidean", diag=FALSE)
-    datascale.ag = hclust(datascale.dist,method="ward.D")
+    datascale.dist = dist(raw_data_scale, method="euclidean", diag=FALSE)
+    datascale.ag = hclust(datascale.dist, method="ward.D")
     ggplot(color_branches(datascale.ag, k = input$choosek2), labels = TRUE) 
-    fviz_dend(datascale.ag,k = input$choosek2, cex=0.5, show_labels = TRUE, rect = TRUE, color_labels_by_k = TRUE, ggtheme = theme_gray())
+    fviz_dend(datascale.ag,k = input$choosek2, cex=1.10, show_labels = TRUE, rect = TRUE, color_labels_by_k = TRUE, ggtheme = theme_void())
   })
 }
 
-
+# Run app code ----
 shinyApp(ui = ui, server = server)
 
 
