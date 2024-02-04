@@ -100,4 +100,6 @@ There are two basics ways to share a shiny app with R:
 
 
 
-[Please click here to run app of this repo](https://oagbohouto.shinyapps.io/APP-4/?_ga=2.60336173.1667294675.1682961383-489944053.1682961383)
+[Please click here to run USA clustering app of this repo](https://oagbohouto.shinyapps.io/clustering/): This app gives e clustering of United States based on their demographics data. We use here two clustering methods such as k-means and Hierarchical Ascendent Classification. Therefore with this app you can create your own cluster of USA using demographics data. 
+
+[Please click here to run stock vizualisation app of this repo](https://oagbohouto.shinyapps.io/stockviz/): This app is useful for stock monitoring using data from Yahoo Finance. You select your stock, range of date that you want to see and then you output a trend graphs of stock open value, close value, highest and lowest value over the day. A forecast tool will be developped later.
